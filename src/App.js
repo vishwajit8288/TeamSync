@@ -5,7 +5,6 @@ import EmployeeCreation from './components/EmployeeCreation';
 import EMployeeAttendance from './components/EmployeeAttendance';
 import EmployeeLeave from './components/EmployeeLeave';
 import SalaryVoucher from './components/SalaryVoucher';
-import EmployeeAttendance from './components/EmployeeAttendance';
 import SalaryAdvance from './components/SalaryAdvance';
 function App() {
   return (
@@ -15,14 +14,13 @@ function App() {
           <div className="container-fluid">
             <ul className="navbar-nav">
               <li className="nav-item">
-
-                 <Link className="nav-link" to="/employeeCreation" >EmployeeCreation</Link> 
+                 <Link className="nav-link" to="/employeeCreation" >Employee</Link> 
               </li>
               <li className="nav-item">
-                 <Link className='nav-link' to="/employeeAttendence">EMployeeAttendance</Link>
+                 <Link className='nav-link' to="/employeeAttendence">Attendance</Link>
               </li>
               <li className="nav-item">
-                 <Link className='nav-link' to="/employeeLeave">EmployeeLeave</Link>
+                 <Link className='nav-link' to="/employeeLeave">Leave</Link>
               </li>
               <li className="nav-item">
                  <Link className='nav-link' to="/salaryAdvancce">SalaryAdvance</Link>
@@ -44,6 +42,7 @@ function App() {
      </Routes>
      
      </BrowserRouter>
+
     </div>
   );
 }

@@ -28,8 +28,9 @@ const EmployeeCreation = () => {
         const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/GetAllEmployee");
         setEmployeeList(result.data.data);
     }
-    const saveEmployee = async () => {
+    const addEmployee = async () => {
         const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/CreateEmployee", employeeobj);
+        
         if (result.data.result) {
             alert("Employee Created Succefully")
             getAllEmployee() //table mdhe automatic new user refress n karta disel
@@ -40,8 +41,9 @@ const EmployeeCreation = () => {
     const editEmployee = async (id) => {
         const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/GetEmployeeByEmpId?empid=" + id);
         debugger;
-        if (result.data.result) {
+        if (result.data.result) { //result.data mdhe purn object bhetla
             setEmployeeObj(result.data.data)
+            debugger;
 
         } else {
             alert(result.data.message)
@@ -50,7 +52,8 @@ const EmployeeCreation = () => {
     const UpdateEmployee = async () => {
         const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateEmployee", employeeobj);
         debugger;
-        if (result.data.data) {
+        if (result.data.result) {
+            debugger;
             alert("Employee Update Successfull");
             getAllEmployee();
 
@@ -72,7 +75,7 @@ const EmployeeCreation = () => {
         <div>
             <div className='container bg-success mt-2'>
                 <div className='row'>
-                    <div className='col-md-6 col-sm-12   mt-3'>
+                    <div className='col-md-6 mt-3'>
                         <div className='row'>
                             <div className='col-md-12  d-flex  justify-content-end'>
                                 <h4>Employee Creation</h4>
@@ -80,52 +83,61 @@ const EmployeeCreation = () => {
                                     <button className='btn btn-sm btn-danger' onClick={getAllEmployee}>Show Employee</button>
                                 </div>
                             </div>
+                        </div>
+                        {/* <div className='col-md-6 pt-2 ms-2'> */}
+                        <div className='row'>
+                            <div className='col-md-6'>
+                                <div className='row'>
+                                    <div className='col-md-12'>
+                                        <div className='table-responsive-sm'></div>
+                                        <div className='table'>
+                                            <table className="table table-bordered">
+                                                <thead className='me-2'>
+                                                    <tr>
+                                                        <th>Sr No.</th>
+                                                        <th>Name</th>
+                                                        <th>Contact No</th>
+                                                        <th>Alt No</th>
+                                                        <th>Email</th>
+                                                        <th>City</th>
+                                                        {/* <th>Branch</th> */}
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {
+                                                        employeeList.map((item, index) => {
 
-                            <div className='row'>
-                                <div className='col-md-12 col-sm-12 pt-2'>
-                                    <table className="table table-bordered">
-
-                                        <thead className='me-2'>
-                                            <tr>
-                                                <th>Sr No.</th>
-                                                <th>Name</th>
-                                                <th>Contact No</th>
-                                                <th>Alt No</th>
-                                                <th>Email</th>
-                                                <th>City</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                employeeList.map((item, index) => {
-
-                                                    return (<tr>
-                                                        <td>{index + 1}</td>
-                                                        <td>{item.empName}</td>
-                                                        <td>  {item.empContactNo} </td>
-                                                        <td>  {item.empAltContactNo} </td>
-                                                        <td>  {item.empEmail} </td>
-                                                        <td>  {item.city} </td>
-                                                        <td>
-                                                            <button className='btn btn-sm btn-primary' onClick={() => { editEmployee(item.empId) }}>Edit</button>
-                                                        </td>
-                                                    </tr>)
-                                                })
-                                            }
-                                        </tbody>
-
-                                    </table>
-
+                                                            return (<tr>
+                                                                <td>{index + 1}</td>
+                                                                <td>{item.empName}</td>
+                                                                <td>  {item.empContactNo} </td>
+                                                                <td>  {item.empAltContactNo} </td>
+                                                                <td>  {item.empEmail} </td>
+                                                                <td>  {item.city} </td>
+                                                                {/* <td>  {item.bankBranch} </td> */}
+                                                                <td>
+                                                                    <button className='btn btn-sm btn-primary' onClick={() => { editEmployee(item.empId) }}>Edit</button>
+                                                                </td>
+                                                            </tr>)
+                                                        })
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
-
                         </div>
+                        {/* </div> */}
+
+
                     </div>
-                    <div className='col-md-6 col-sm-12 mt-5'>
-                        <div className='row ms-2 p-2'>
-                            <div className='row'>
+
+                    <div className='col-md-6 mt-5'>
+                        <div className='row'>
+                            <div className='col-md-12  d-flex justify-content-end'>
                                 <div className='col-md-4 p-2'>
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'empName') }} value={employeeobj.empName} className='form-control' placeholder='Enter Name' />
                                 </div>
@@ -137,7 +149,7 @@ const EmployeeCreation = () => {
                                 </div>
                             </div>
 
-                            <div className='row'>
+                            <div className='col-md-12  d-flex justify-content-end'>
                                 <div className='col-md-4 p-2'>
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'empEmail') }} className='form-control' value={employeeobj.empEmail} placeholder='Enter Email' />
                                 </div>
@@ -148,7 +160,7 @@ const EmployeeCreation = () => {
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'city') }} className='form-control' value={employeeobj.city} placeholder='Enter City' />
                                 </div>
                             </div>
-                            <div className='row'>
+                            <div className='col-md-12  d-flex justify-content-end'>
                                 <div className='col-md-4 p-2'>
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'state') }} className='form-control' value={employeeobj.state} placeholder='Enter State' />
                                 </div>
@@ -159,7 +171,7 @@ const EmployeeCreation = () => {
                                     <textarea onChange={(event) => { changeFormValue(event, 'addressLine2') }} className='form-control' value={employeeobj.addressLine2} placeholder='Enter Address Line 2'></textarea>
                                 </div>
                             </div>
-                            <div className='row'>
+                            <div className='col-md-12  d-flex justify-content-end'>
                                 <div className='col-md-4 p-2'>
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'bankName') }} className='form-control' value={employeeobj.bankName} placeholder=' Enter Bank Name' />
                                 </div>
@@ -170,7 +182,7 @@ const EmployeeCreation = () => {
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'ifsc') }} className='form-control' value={employeeobj.ifsc} placeholder='Enter IFSC' />
                                 </div>
                             </div>
-                            <div className='row'>
+                            <div className='col-md-12   d-flex justify-content-end '>
                                 <div className='col-md-4 p-2'>
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'bankBranch') }} className='form-control' value={employeeobj.bankBranch} placeholder='Enter Branch' />
                                 </div>
@@ -178,18 +190,17 @@ const EmployeeCreation = () => {
                                     <input type='text' onChange={(event) => { changeFormValue(event, 'salary') }} className='form-control' value={employeeobj.salary} placeholder='Enter Salary' />
                                 </div>
                                 <div className='col-md-4 p-2'>
-                                    {employeeobj.empId == 0 && <button className='btn btn-primary btn-sm p-2' onClick={saveEmployee}>Add Employee</button>}&nbsp;
-                                    {employeeobj.empId !== 0 && <button className='btn btn-primary btn-sm p-2' onClick={UpdateEmployee}>Update</button>}&nbsp;
-                                    <button className='btn btn-danger btn-sm p-2' onClick={deleteEmployee}>Delete</button>
+                                    {employeeobj.empId == 0 && <button className='btn btn-primary btn-sm p-2' onClick={addEmployee}>Add Employee</button>}
+                                    {employeeobj.empId !== 0 && <button className='btn btn-primary btn-sm p-2' onClick={UpdateEmployee}>Update</button>}
+                                    <button className='btn btn-danger btn-sm p-2' onClick={() => { deleteEmployee(employeeobj.empId) }}>Delete</button>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+        </div >
     );
 };
 
