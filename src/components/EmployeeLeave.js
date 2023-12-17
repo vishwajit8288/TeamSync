@@ -36,16 +36,21 @@ const EmployeeLeave = () => {
     }
 
     const addLeave = async () => {
-        const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/AddLeave", empleaveobj);
-        debugger;
-        if (result.data.result) {
+        try {
+            const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/AddLeave", empleaveobj);
             debugger;
-            alert('Leave Added Successfull');
-            getAllLeave()
-            debugger;
-        } else {
-            alert(result.data.message)
+            if (result.data.result) {
+                debugger;
+                alert('Leave Added Successfull');
+                getAllLeave()
+                debugger;
+            } else {
+                alert(result.data.message)
+            }
+        } catch (error) {
+            alert(error.code)
         }
+       
     }
     //edit
     const onEdit = async (id) => {
@@ -61,7 +66,8 @@ const EmployeeLeave = () => {
     }
   //update 
   const updateLeave = async () => {
-    const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateLeave",empleaveobj );
+    try {
+        const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateLeave",empleaveobj );
     debugger;
     if (result.data.data) {
         alert("Leave  Update Successfully");
@@ -70,18 +76,26 @@ const EmployeeLeave = () => {
     } else {
         alert(result.data.massage)
     }
+    } catch (error) {
+        alert(error.code)
+    }
+    
 }
 
 const deleteLeave = async (id) => {
-    const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteLeaveById?leaveid=" + id);
-    debugger;
-    if (result.data.result) {
+    const isDelte = window.confirm('Are You Sure want to Delete');
+    if (isDelte) {
+        const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteLeaveById?leaveid=" + id);
         debugger;
-        alert("Leave Delete Succefully")
-        getAllLeave();
-    } else {
-        alert(result.data.message)
+        if (result.data.result) {
+            debugger;
+            alert("Leave Delete Succefully")
+            getAllLeave();
+        } else {
+            alert(result.data.message)
+        }
     }
+   
 }
 
 
@@ -184,7 +198,7 @@ const deleteLeave = async (id) => {
                                         <button className='btn btn-secondary'>Reset</button>&nbsp;
                                         <button className='btn btn-success' onClick={addLeave}>Save Leave</button>&nbsp;
                                         <button className='btn btn-success' onClick={updateLeave}>Update</button>
-                                               <p>{JSON.stringify(empleaveobj) }</p>
+                                               {/* <p>{JSON.stringify(empleaveobj) }</p> */}
                                     </div>
                                 </div>
                             </div>

@@ -38,15 +38,20 @@ const SalaryAdvance = () => {
         "advanceAmount": 0,
         "reason": ""
     })
+  
     const addAdvance = async () => {
-        const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/AddAdvance", addAdvanceobj);
-        if (result.data.result) {
-            alert('Advance Added Successfully');
-            getSalaryAdvance();
-        } else {
-            alert(result.data.message)
+        try {
+            const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/AddAdvance", addAdvanceobj);
+            if (result.data.result) {
+                alert('Advance Added Successfully');
+                getSalaryAdvance();
+            } else {
+                alert(result.data.message)
+            }
+        } catch (error) {
+            alert(error.code)
         }
-
+    
     }
     //Read Input Value
     const changeValue = (event, key) => {
@@ -67,28 +72,38 @@ const SalaryAdvance = () => {
     }
     //update 
     const updateSalary = async () => {
-        const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateAdvance", addAdvanceobj);
-        debugger;
-        if (result.data.data) {
-            alert("Salary Update Successfully");
-            getSalaryAdvance();
+        try {
+            const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateAdvance", addAdvanceobj);
             debugger;
-        } else {
-            alert(result.data.massage)
+            if (result.data.data) {
+                alert("Salary Update Successfully");
+                getSalaryAdvance();
+                debugger;
+            } else {
+                alert(result.data.massage)
+            }
+        } catch (error) {
+            alert(error.code)
         }
+      
     }
     //delete 
+  
     const deleteAdvance = async (id) => {
-        const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteAdvanceById?advanceid=" + id);
-        debugger;
-        if (result.data.result) {
+        const isDelte = window.confirm('Are You Sure want to Delete');
+        if (isDelte) {
+            const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteAdvanceById?advanceid=" + id);
             debugger;
-            alert("Advance Delete Succefully")
-            getSalaryAdvance();
-        } else {
-            alert(result.data.message)
+            if (result.data.result) {
+                debugger;
+                alert("Advance Delete Succefully")
+                getSalaryAdvance();
+            } else {
+                alert(result.data.message)
+            }
         }
-    }
+        }
+       
 
     return (
         <div>

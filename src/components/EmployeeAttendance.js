@@ -39,56 +39,84 @@ const EmployeeAttendance = () => {
     }
 
     const saveAttendance = async () => {
-        debugger
-        const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/AddAttendance", attendanceObj);
-        debugger;
-        if (result.data.result) {
-            alert('Attendance Added');
-            getAllAttendance();
-        } else {
-            alert(result.data.message)
+        try {
+            const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/AddAttendance", attendanceObj);
+            debugger;
+            if (result.data.result) {
+                alert('Attendance Added');
+                getAllAttendance();
+            } else {
+                alert(result.data.message)
+            }
+        } catch (error) {
+            alert(error.code)
         }
+
     }
-    const onEdit = (item)=> {
-        setAttendanceObj(prevObj => ({...prevObj,attendanceId:item.attendanceId,
-            employeeId:item.employeeId, 
-            attendanceDate:item.attendanceDate,
-            inTime:item.inTime,
-            outTime:item.outTime,
-            isFullDay:item.isFullDay
-            
-        }))
-        
-    }
+    const onEdit = (item) => {
+        try {
+            setAttendanceObj(prevObj => ({
+                ...prevObj, attendanceId: item.attendanceId,
+                employeeId: item.employeeId,
+                attendanceDate: item.attendanceDate,
+                inTime: item.inTime,
+                outTime: item.outTime,
+                isFullDay: item.isFullDay
 
-const updateAttendance = async() =>{
-    const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateAttendance",attendanceObj);
-    debugger;
-    if (result.data.result) {
-        debugger;
-        alert("Attendance Update Successfull");
-        getAllAttendance();
+            }))
 
-    } else {
-        alert(result.data.massage)
-    }
-}
-
-
-
-
-
-
-const deleteAttendance =async(id)=>{
-    const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteAttendanceById?attendanceId=" + id);
-        debugger;
-        if (result.data.result) {
-            alert("Attendance Deleted Succefully")
-            getAllAttendance();
-        } else {
-            alert(result.data.message)
+        } catch (error) {
+            alert('Error Occuored');
         }
-}
+
+
+    }
+
+    const updateAttendance = async () => {
+        try {
+            const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateAttendance", attendanceObj);
+            debugger;
+            if (result.data.result) {
+                debugger;
+                alert("Attendance Update Successfull");
+                getAllAttendance();
+
+            } else {
+                alert(result.data.massage)
+            }
+
+        } catch (error) {
+            alert(error.code)
+        }
+
+    }
+
+    const deleteAttendance = async (id) => {
+        const isDelte = window.confirm('Are You Sure want to Delete');
+        if (isDelte) {
+            const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteAttendanceById?attendanceId=" + id);
+            debugger;
+            if (result.data.result) {
+                alert("Attendance Deleted Succefully")
+                getAllAttendance();
+            } else {
+                alert(result.data.message)
+            }
+        }
+        // const reset = () => {
+        //     setAttendanceObj({
+        //         "attendanceId": 0,
+        //         "employeeId": 0,
+        //         "attendanceDate": "",
+        //         "inTime": "",
+        //         "outTime": "",
+        //         "isFullDay": false
+        //     })
+        // }
+
+
+
+    }
     return (
         <div>
             <div className='container-fluid'>
@@ -110,7 +138,7 @@ const deleteAttendance =async(id)=>{
                                             <th>Out-time</th>
                                             <th>Is Full Day</th>
                                             <th>Edit</th>
-                                                <th>Delete</th>
+                                            <th>Delete</th>
                                         </tr>
                                     </thead>
                                     {
@@ -129,25 +157,25 @@ const deleteAttendance =async(id)=>{
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        }
-                                          {
-                                        isLoader == false &&  <tbody>
-                                        {
-                                            attendanceData.map((item, index) => {
-                                                return (<tr>
-                                                    <td>{index +1}</td>
-                                                    <td>{item.empName}</td>
-                                                    <td>{item.empContactNo}</td>
-                                                    <td>{item.attendanceDate}</td>
-                                                    <td>{item.inTime}</td>
-                                                    <td>{item.outTime}</td>
-                                                    <td>{item.isFullDay ? 'Full Day' : 'Half day'}</td>
-                                                    <td><button className='btn btn-primary btn-sm' onClick={()=>{onEdit(item)}}>Edit</button></td>
-                                                    <td><button className='btn btn-danger btn-sm' onClick={() => {deleteAttendance(item.attendanceId)}}>Delete</button></td>
-                                                </tr>)
-                                            })
-                                        }
-                                    </tbody>
+                                    }
+                                    {
+                                        isLoader == false && <tbody>
+                                            {
+                                                attendanceData.map((item, index) => {
+                                                    return (<tr>
+                                                        <td>{index + 1}</td>
+                                                        <td>{item.empName}</td>
+                                                        <td>{item.empContactNo}</td>
+                                                        <td>{item.attendanceDate}</td>
+                                                        <td>{item.inTime}</td>
+                                                        <td>{item.outTime}</td>
+                                                        <td>{item.isFullDay ? 'Full Day' : 'Half day'}</td>
+                                                        <td><button className='btn btn-primary btn-sm' onClick={() => { onEdit(item) }}>Edit</button></td>
+                                                        <td><button className='btn btn-danger btn-sm' onClick={() => { deleteAttendance(item.attendanceId) }}>Delete</button></td>
+                                                    </tr>)
+                                                })
+                                            }
+                                        </tbody>
                                     }
                                 </table>
                             </div>
@@ -173,13 +201,13 @@ const deleteAttendance =async(id)=>{
                                     </div>
                                     <div className='col-6'>
                                         <label>Select Date</label>
-                                        <input type='date' onChange={(event) => { changeFormValue(event, 'attendanceDate') }}  value={attendanceObj.attendanceDate} className='form-control' />
+                                        <input type='date' onChange={(event) => { changeFormValue(event, 'attendanceDate') }} value={attendanceObj.attendanceDate} className='form-control' />
                                     </div>
                                 </div>
                                 <div className='row'>
                                     <div className='col-6'>
                                         <label>In-Time</label>
-                                        <input type='time' onChange={(event) => { changeFormValue(event, 'inTime') }}  value={attendanceObj.inTime} className='form-control' />
+                                        <input type='time' onChange={(event) => { changeFormValue(event, 'inTime') }} value={attendanceObj.inTime} className='form-control' />
                                     </div>
                                     <div className='col-6'>
                                         <label>Out-time</label>
@@ -189,15 +217,15 @@ const deleteAttendance =async(id)=>{
                                 <div className='row'>
                                     <div className='col-6'>
                                         <label>Is Full Day</label>
-                                        <input type='checkbox' onChange={(event) => { changeFullDay(event,'isFullDay') }} checked={attendanceObj.isFullDay} />
+                                        <input type='checkbox' onChange={(event) => { changeFullDay(event, 'isFullDay') }} checked={attendanceObj.isFullDay} />
                                     </div>
                                 </div>
                                 <div className='row pt-3'>
                                     <div className='col-12'>
-                                        <button className='btn btn-secondary'>Reset</button>&nbsp;
+                                        <button className='btn btn-secondary' >Reset</button>&nbsp;
                                         <button className='btn btn-success' onClick={saveAttendance}>Save Attendance</button>&nbsp;
                                         <button className='btn btn-success' onClick={updateAttendance}>Update</button>&nbsp;
-                                       
+
                                     </div>
                                 </div>
                             </div>
