@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const EmployeeLeave = () => {
     let [empleaves, setEmpLeaves] = useState([]);//1 variable  to store array to display in table
+    // let [isLoader, setIsLoader] = useState(true);
     let [employeeLeave, setEmployeeLeave] = useState([]);//3 one more variable to store another array
 
     //which we are going to bind to dropdwon
@@ -50,54 +51,79 @@ const EmployeeLeave = () => {
         } catch (error) {
             alert(error.code)
         }
-       
+
     }
     //edit
-    const onEdit = async (id) => {
-        const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/GetAllLeavesByEmpId?empid" + id);
-        debugger;
-        if (result.data.result) { //result.data mdhe purn object bhetla
-            setEmpLeaveObj(result.data.data)
-            debugger;
-           
-        } else {
-            alert(result.data.message)
+    // const onEdit = async (id) => {
+    //     const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/GetAllLeavesByEmpId?empid" + id);
+    //     debugger;
+    //     if (result.data.result) { //result.data mdhe purn object bhetla
+    //         setEmpLeaveObj(result.data.data)
+    //         debugger;
+
+    //     } else {
+    //         alert(result.data.message)
+    //     }
+    // }
+    const onEdit = (item) => {
+        try {
+            setEmpLeaveObj(prevObj => ({
+                ...prevObj, leaveId: item.leaveId,
+                employeeId: item.employeeId,
+                leaveDate: item.leaveDate,
+                leaveReason: item.leaveReason,
+                noOfFullDayLeaves: item.noOfFullDayLeaves,
+                noOfHalfDayLeaves: item.noOfHalfDayLeaves
+
+            }))
+
+        } catch (error) {
+            alert('Error Occuored');
         }
     }
-  //update 
-  const updateLeave = async () => {
-    try {
-        const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateLeave",empleaveobj );
-    debugger;
-    if (result.data.data) {
-        alert("Leave  Update Successfully");
-       getAllLeave();
-        debugger;
-    } else {
-        alert(result.data.massage)
-    }
-    } catch (error) {
-        alert(error.code)
-    }
-    
-}
-
-const deleteLeave = async (id) => {
-    const isDelte = window.confirm('Are You Sure want to Delete');
-    if (isDelte) {
-        const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteLeaveById?leaveid=" + id);
-        debugger;
-        if (result.data.result) {
+    //update 
+    const updateLeave = async () => {
+        try {
+            const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateLeave", empleaveobj);
             debugger;
-            alert("Leave Delete Succefully")
-            getAllLeave();
-        } else {
-            alert(result.data.message)
+            if (result.data.result) {
+                alert("Leave  Update Successfully");
+                getAllLeave();
+                debugger;
+            } else {
+                alert(result.data.massage)
+            }
+        } catch (error) {
+            alert(error.code)
         }
-    }
-   
-}
 
+    }
+
+    const deleteLeave = async (id) => {
+        const isDelte = window.confirm('Are You Sure want to Delete');
+        if (isDelte) {
+            const result = await axios.get("https://onlinetestapi.gerasim.in/api/TeamSync/DeleteLeaveById?leaveid=" + id);
+            debugger;
+            if (result.data.result) {
+                debugger;
+                alert("Leave Delete Succefully")
+                getAllLeave();
+            } else {
+                alert(result.data.message)
+            }
+        }
+
+    }
+    const reset = () => {
+        setEmpLeaveObj({
+            "leaveId": 0,
+            "employeeId": 0,
+            "leaveDate": "",
+            "leaveReason": "",
+            "noOfFullDayLeaves": 0,
+            "noOfHalfDayLeaves": 0
+        })
+    }
 
 
     return (
@@ -119,12 +145,16 @@ const deleteLeave = async (id) => {
                                             <th>LeaveReason</th>
                                             <th>Full Day Leaves</th>
                                             <th>Half Day Leaves</th>
-                                            <th>Action</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
 
 
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                  
+                                    
+                                   
+                                  <tbody>
                                         {
                                             empleaves.map((item, index) => {
                                                 return (<tr>
@@ -134,22 +164,20 @@ const deleteLeave = async (id) => {
                                                     <td>{item.leaveReason}</td>
                                                     <td>{item.noOfFullDayLeaves}</td>
                                                     <td>{item.noOfHalfDayLeaves}</td>
-                                                    <td>
+                                                   
                                                         <td>
-                                                            <td><button className='btn btn-sm btn-primary' onClick={() => { onEdit(item.empId) }}>Edit</button></td>
+                                                            <td><button className='btn btn-sm btn-primary' onClick={() => { onEdit(item) }}>Edit</button></td>
                                                         </td>
                                                         <td>
-                                                        <td>  <button className='btn btn-danger btn-sm' onClick={() => deleteLeave(item.leaveId)}>Delete</button></td>
+                                                            <td>  <button className='btn btn-danger btn-sm' onClick={() => deleteLeave(item.leaveId)}>Delete</button></td>
                                                         </td>
-                                                    </td>
+                                                   
                                                 </tr>)
 
                                             })
                                         }
-
-
-
                                     </tbody>
+                                    
                                 </table>
                             </div>
                         </div>
@@ -164,7 +192,7 @@ const deleteLeave = async (id) => {
                                     <div className='col-6'>
                                         <label>Select Employee</label>
                                         <select className='form-select' onChange={(event) => { changeFormValue(event, 'employeeId') }} value={empleaveobj.employeeId}>
-                                        <option value=''>Select Employee</option>
+                                            <option value=''>Select Employee</option>
                                             {
                                                 employeeLeave.map((item) => {
                                                     return (<option value={item.empId}> {item.empName}</option>)
@@ -194,12 +222,16 @@ const deleteLeave = async (id) => {
                                     </div>
                                 </div>
                                 <div className='row pt-3'>
-                                    <div className='col-12'>
-                                        <button className='btn btn-secondary'>Reset</button>&nbsp;
-                                        <button className='btn btn-success' onClick={addLeave}>Save Leave</button>&nbsp;
-                                        <button className='btn btn-success' onClick={updateLeave}>Update</button>
-                                               {/* <p>{JSON.stringify(empleaveobj) }</p> */}
-                                    </div>
+                                    <div className='col-6'>
+                                        <button className='btn btn-secondary' onClick={reset}>Reset</button>
+                                        </div>
+                                        <div className='col-6'>
+                                        {empleaveobj.leaveId == 0 && <button className='btn btn-success' onClick={addLeave}>Save Leave</button>}
+                                       {empleaveobj.leaveId !== 0 &&  <button className='btn btn-warning' onClick={updateLeave}>Update</button>}
+                                        {/* <p>{JSON.stringify(empleaveobj) }</p> */}
+                                        </div>
+                                      
+                                    
                                 </div>
                             </div>
                         </div>

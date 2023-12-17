@@ -103,20 +103,21 @@ const EmployeeAttendance = () => {
                 alert(result.data.message)
             }
         }
-        // const reset = () => {
-        //     setAttendanceObj({
-        //         "attendanceId": 0,
-        //         "employeeId": 0,
-        //         "attendanceDate": "",
-        //         "inTime": "",
-        //         "outTime": "",
-        //         "isFullDay": false
-        //     })
-        // }
-
-
-
     }
+    const reset = () => {
+        setAttendanceObj({
+            "attendanceId": 0,
+            "employeeId": 0,
+            "attendanceDate": "",
+            "inTime": "",
+            "outTime": "",
+            "isFullDay": false
+        })
+    }
+
+
+
+
     return (
         <div>
             <div className='container-fluid'>
@@ -221,11 +222,12 @@ const EmployeeAttendance = () => {
                                     </div>
                                 </div>
                                 <div className='row pt-3'>
-                                    <div className='col-12'>
-                                        <button className='btn btn-secondary' >Reset</button>&nbsp;
-                                        <button className='btn btn-success' onClick={saveAttendance}>Save Attendance</button>&nbsp;
-                                        <button className='btn btn-success' onClick={updateAttendance}>Update</button>&nbsp;
-
+                                    <div className='col-6'>
+                                        <button className='btn btn-secondary' onClick={reset}>Reset</button>
+                                    </div>
+                                    <div className='col-6'>
+                                    {attendanceObj.attendanceId == 0 && <button className='btn btn-success' onClick={saveAttendance}>Save Attendance</button>  }
+                                    {attendanceObj.attendanceId !== 0 &&  <button className='btn btn-warning' onClick={updateAttendance}>Update</button>}
                                     </div>
                                 </div>
                             </div>

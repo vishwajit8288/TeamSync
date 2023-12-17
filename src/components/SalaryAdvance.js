@@ -18,17 +18,10 @@ const SalaryAdvance = () => {
         SetEmployeeList(result.data.data);
     }
 
-
-
-
-
-
     const getEmployee = async () => {
         const result = await axios.get('https://onlinetestapi.gerasim.in/api/TeamSync/GetAllEmployee');
         setEmployeeAdvance(result.data.data);
     }
-
-
     //Add Salary Advance
     //create obj
     let [addAdvanceobj, setAddAdvanceObj] = useState({
@@ -38,7 +31,7 @@ const SalaryAdvance = () => {
         "advanceAmount": 0,
         "reason": ""
     })
-  
+
     const addAdvance = async () => {
         try {
             const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/AddAdvance", addAdvanceobj);
@@ -51,7 +44,7 @@ const SalaryAdvance = () => {
         } catch (error) {
             alert(error.code)
         }
-    
+
     }
     //Read Input Value
     const changeValue = (event, key) => {
@@ -60,7 +53,7 @@ const SalaryAdvance = () => {
 
     //edit
     const onEdit = (item) => {
-        debugger;
+
         setAddAdvanceObj(prevObj => ({
             ...prevObj, employeeId: item.employeeId,
             advanceDate: item.advanceDate,
@@ -68,27 +61,33 @@ const SalaryAdvance = () => {
             reason: item.reason
 
         }))
-        debugger;
+
     }
     //update 
     const updateSalary = async () => {
         try {
+
             const result = await axios.post("https://onlinetestapi.gerasim.in/api/TeamSync/UpdateAdvance", addAdvanceobj);
             debugger;
-            if (result.data.data) {
+
+            if (result.data.result) {
+                debugger;
                 alert("Salary Update Successfully");
                 getSalaryAdvance();
                 debugger;
             } else {
                 alert(result.data.massage)
             }
+
+
         } catch (error) {
             alert(error.code)
         }
-      
+
     }
+
     //delete 
-  
+
     const deleteAdvance = async (id) => {
         const isDelte = window.confirm('Are You Sure want to Delete');
         if (isDelte) {
@@ -102,8 +101,16 @@ const SalaryAdvance = () => {
                 alert(result.data.message)
             }
         }
-        }
-       
+    }
+    const reset = () => {
+        setAddAdvanceObj({
+            "advanceId": 0,
+            "employeeId": 0,
+            "advanceDate": "",
+            "advanceAmount": 0,
+            "reason": ""
+        })
+    }
 
     return (
         <div>
@@ -138,7 +145,7 @@ const SalaryAdvance = () => {
                                                         <td>{item.advanceAmount}</td>
                                                         <td>{item.reason}</td>
                                                         <td><button className='btn btn-sm btn-primary' onClick={() => onEdit(item)}>Edit</button></td>
-                                                        <td>  <button className='btn btn-danger btn-sm' onClick={() => deleteAdvance(item.advanceId)}>Delete</button></td>
+                                                        <td><button className='btn btn-danger btn-sm' onClick={() => deleteAdvance(item.advanceId)}>Delete</button></td>
 
                                                     </tr>
                                                 )
@@ -174,6 +181,7 @@ const SalaryAdvance = () => {
                                         <label>Advance Date</label>
                                         <input type='date' className='form-control' onChange={(event) => { changeValue(event, 'advanceDate') }} value={addAdvanceobj.advanceDate} />
                                     </div>
+
                                 </div>
                                 <div className='row'>
                                     <div className='col-6 pt-1'>
@@ -187,12 +195,16 @@ const SalaryAdvance = () => {
                                 </div>
 
                                 <div className='row pt-3'>
-                                    <div className='col-12'>
-                                        <button className='btn btn-secondary'>Reset</button>&nbsp;
-                                        <button className='btn btn-success' onClick={addAdvance}>Add Advance</button>&nbsp;
-                                        <button className='btn btn-success' onClick={updateSalary}>Update</button>&nbsp;
-
+                                    <div className='col-6'>
+                                        <button className='btn btn-secondary' onClick={reset}>Reset</button>
                                     </div>
+                                    <div className='col-6'>
+                                        {addAdvanceobj.advanceId == 0 && <button className='btn btn-success' onClick={addAdvance}>Save Advance</button>}
+                                    {addAdvanceobj.advanceId !== 0 && <button className='btn btn-warning' onClick={updateSalary}>Update</button>}
+                                    </div>
+
+
+
 
                                     {/* <p>{JSON.stringify(addAdvanceobj) }</p> */}
                                 </div>
