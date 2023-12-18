@@ -53,15 +53,16 @@ const SalaryAdvance = () => {
 
     //edit
     const onEdit = (item) => {
-
+debugger;
         setAddAdvanceObj(prevObj => ({
-            ...prevObj, employeeId: item.employeeId,
+            ...prevObj, advanceId: item.advanceId,
+            employeeId: item.employeeId,
             advanceDate: item.advanceDate,
             advanceAmount: item.advanceAmount,
             reason: item.reason
 
         }))
-
+        debugger;
     }
     //update 
     const updateSalary = async () => {
@@ -199,7 +200,7 @@ const SalaryAdvance = () => {
                                         <button className='btn btn-secondary' onClick={reset}>Reset</button>
                                     </div>
                                     <div className='col-6'>
-                                        {addAdvanceobj.advanceId == 0 && <button className='btn btn-success' onClick={addAdvance}>Save Advance</button>}
+                                    {addAdvanceobj.advanceId == 0 && <button className='btn btn-success' onClick={addAdvance}>Save Advance</button>}
                                     {addAdvanceobj.advanceId !== 0 && <button className='btn btn-warning' onClick={updateSalary}>Update</button>}
                                     </div>
 
